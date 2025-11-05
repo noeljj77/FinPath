@@ -37,7 +37,7 @@ function Login({ onLogin }) {
             <span className="text-6xl">💰</span>
           </div>
           <h1 className="text-5xl font-bold text-white mb-2 drop-shadow-lg">
-            Finance Simulator
+            FinPath - Personal Finance Simulator
           </h1>
           <p className="text-white text-lg opacity-90">Build Your Credit, Secure Your Future</p>
         </div>
@@ -124,7 +124,7 @@ function Login({ onLogin }) {
 
         {/* Footer */}
         <p className="text-center text-white mt-8 opacity-75">
-          © 2025 Finance Simulator. All rights reserved.
+          © 2025 FinPath - Personal Finance Simulator.
         </p>
       </div>
     </div>

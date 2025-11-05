@@ -37,7 +37,7 @@ function Register({ onRegister }) {
             <span className="text-6xl">🎯</span>
           </div>
           <h1 className="text-5xl font-bold text-white mb-2 drop-shadow-lg">
-            Join Finance Simulator
+            Join FinPath
           </h1>
           <p className="text-white text-lg opacity-90">Start Your Financial Journey Today</p>
         </div>
@@ -143,7 +143,7 @@ function Register({ onRegister }) {
 
         {/* Footer */}
         <p className="text-center text-white mt-8 opacity-75">
-          © 2025 Finance Simulator. All rights reserved.
+          © 2025 FinPath - Personal Finance Simulator. All rights reserved.
         </p>
       </div>
     </div>

@@ -300,7 +300,7 @@ function Dashboard({ user, onLogout }) {
           <div className="flex justify-between items-center">
             <div>
               <h1 className={`text-3xl font-bold ${darkMode ? 'text-white' : 'bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent'}`}>
-                💰 Finance Simulator
+                💰 FinPath
               </h1>
               {user && (
                 <p className={`text-sm mt-1 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>

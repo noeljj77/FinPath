@@ -1389,11 +1389,243 @@ function LoanModal({ loan, onClose, onSimulate, darkMode }) {
   );
 }
 
-// Add EditModal with dark mode support (similar pattern)
 function EditModal({ data, onClose, onEdit, darkMode }) {
-  // ... (Same structure as AddModal but with pre-filled values)
-  // Add darkMode conditional classes throughout
-  // (Keeping the exact same logic as before, just add darkMode ? ... : ... for styling)
+  const { type, item } = data;
+  const [formData, setFormData] = useState({
+    name: item.name || '',
+    amount: item.amount || item.originalAmount || item.startingBalance || 0,
+    frequency: item.frequency || 'monthly',
+    category: item.category || 'Other',
+    apr: item.apr || 0,
+    termMonths: item.termMonths || 12,
+    monthlyContribution: item.monthlyContribution || 0,
+    annualReturnRate: item.annualReturnRate || 0
+  });
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    try {
+      // Prepare the update data based on type
+      let updateData = { name: formData.name };
+      
+      if (type === 'incomes' || type === 'expenses') {
+        updateData.amount = parseFloat(formData.amount);
+        updateData.frequency = formData.frequency;
+        if (type === 'expenses') {
+          updateData.category = formData.category;
+        }
+      } else if (type === 'loans') {
+        updateData.originalAmount = parseFloat(formData.amount);
+        updateData.apr = parseFloat(formData.apr);
+        updateData.termMonths = parseInt(formData.termMonths);
+      } else if (type === 'investments') {
+        updateData.startingBalance = parseFloat(formData.amount);
+        updateData.monthlyContribution = parseFloat(formData.monthlyContribution);
+        updateData.annualReturnRate = parseFloat(formData.annualReturnRate);
+      }
+      
+      await onEdit(type, item.id, updateData);
+    } catch (err) {
+      setError(err.message || 'Failed to update item');
+    }
+  };
+
+  const getTypeLabel = () => {
+    return type.slice(0, -1); // Remove 's' from end (incomes -> income)
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" onClick={onClose}>
+      <div className={`rounded-xl p-6 max-w-md w-full shadow-2xl ${darkMode ? 'bg-gray-800' : 'bg-white'}`} onClick={(e) => e.stopPropagation()}>
+        <h2 className={`text-2xl font-bold mb-4 ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>
+          Edit {getTypeLabel()}
+        </h2>
+        
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-3 py-2 rounded mb-3 text-sm">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className={`block text-sm font-semibold mb-2 ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+              Name
+            </label>
+            <input
+              type="text"
+              required
+              value={formData.name}
+              className={`w-full px-4 py-2 border-2 rounded-lg focus:outline-none ${
+                darkMode 
+                  ? 'bg-gray-700 border-gray-600 text-white focus:border-indigo-500' 
+                  : 'border-gray-300 focus:border-indigo-500'
+              }`}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            />
+          </div>
+
+          <div>
+            <label className={`block text-sm font-semibold mb-2 ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+              {type === 'loans' ? 'Original Amount (₹)' : type === 'investments' ? 'Starting Balance (₹)' : 'Amount (₹)'}
+            </label>
+            <input
+              type="number"
+              step="0.01"
+              required
+              value={formData.amount}
+              className={`w-full px-4 py-2 border-2 rounded-lg focus:outline-none ${
+                darkMode 
+                  ? 'bg-gray-700 border-gray-600 text-white focus:border-indigo-500' 
+                  : 'border-gray-300 focus:border-indigo-500'
+              }`}
+              onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+            />
+          </div>
+
+          {(type === 'incomes' || type === 'expenses') && (
+            <div>
+              <label className={`block text-sm font-semibold mb-2 ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+                Frequency
+              </label>
+              <select
+                className={`w-full px-4 py-2 border-2 rounded-lg focus:outline-none ${
+                  darkMode 
+                    ? 'bg-gray-700 border-gray-600 text-white focus:border-indigo-500' 
+                    : 'border-gray-300 focus:border-indigo-500'
+                }`}
+                value={formData.frequency}
+                onChange={(e) => setFormData({ ...formData, frequency: e.target.value })}
+              >
+                <option value="monthly">Monthly</option>
+                <option value="annual">Annual</option>
+              </select>
+            </div>
+          )}
+
+          {type === 'expenses' && (
+            <div>
+              <label className={`block text-sm font-semibold mb-2 ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+                Category
+              </label>
+              <select
+                className={`w-full px-4 py-2 border-2 rounded-lg focus:outline-none ${
+                  darkMode 
+                    ? 'bg-gray-700 border-gray-600 text-white focus:border-indigo-500' 
+                    : 'border-gray-300 focus:border-indigo-500'
+                }`}
+                value={formData.category}
+                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+              >
+                <option value="Housing">Housing</option>
+                <option value="Food">Food</option>
+                <option value="Transportation">Transportation</option>
+                <option value="Utilities">Utilities</option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="Health">Health</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          )}
+
+          {type === 'loans' && (
+            <>
+              <div>
+                <label className={`block text-sm font-semibold mb-2 ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+                  APR (%)
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  required
+                  value={formData.apr}
+                  className={`w-full px-4 py-2 border-2 rounded-lg focus:outline-none ${
+                    darkMode 
+                      ? 'bg-gray-700 border-gray-600 text-white focus:border-indigo-500' 
+                      : 'border-gray-300 focus:border-indigo-500'
+                  }`}
+                  onChange={(e) => setFormData({ ...formData, apr: e.target.value })}
+                />
+              </div>
+              <div>
+                <label className={`block text-sm font-semibold mb-2 ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+                  Term (months)
+                </label>
+                <input
+                  type="number"
+                  required
+                  value={formData.termMonths}
+                  className={`w-full px-4 py-2 border-2 rounded-lg focus:outline-none ${
+                    darkMode 
+                      ? 'bg-gray-700 border-gray-600 text-white focus:border-indigo-500' 
+                      : 'border-gray-300 focus:border-indigo-500'
+                  }`}
+                  onChange={(e) => setFormData({ ...formData, termMonths: e.target.value })}
+                />
+              </div>
+            </>
+          )}
+
+          {type === 'investments' && (
+            <>
+              <div>
+                <label className={`block text-sm font-semibold mb-2 ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+                  Monthly Contribution (₹)
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={formData.monthlyContribution}
+                  className={`w-full px-4 py-2 border-2 rounded-lg focus:outline-none ${
+                    darkMode 
+                      ? 'bg-gray-700 border-gray-600 text-white focus:border-indigo-500' 
+                      : 'border-gray-300 focus:border-indigo-500'
+                  }`}
+                  onChange={(e) => setFormData({ ...formData, monthlyContribution: e.target.value })}
+                />
+              </div>
+              <div>
+                <label className={`block text-sm font-semibold mb-2 ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+                  Annual Return Rate (%)
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  required
+                  value={formData.annualReturnRate}
+                  className={`w-full px-4 py-2 border-2 rounded-lg focus:outline-none ${
+                    darkMode 
+                      ? 'bg-gray-700 border-gray-600 text-white focus:border-indigo-500' 
+                      : 'border-gray-300 focus:border-indigo-500'
+                  }`}
+                  onChange={(e) => setFormData({ ...formData, annualReturnRate: e.target.value })}
+                />
+              </div>
+            </>
+          )}
+
+          <div className="flex gap-3 pt-2">
+            <button 
+              type="submit" 
+              className="flex-1 bg-gradient-to-r from-indigo-600 to-blue-600 text-white py-3 rounded-lg hover:from-indigo-700 hover:to-blue-700 font-semibold shadow-md"
+            >
+              Update
+            </button>
+            <button 
+              type="button" 
+              onClick={onClose} 
+              className="flex-1 bg-gray-300 py-3 rounded-lg hover:bg-gray-400 font-semibold"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
 }
+
 
 export default Dashboard;

@@ -144,7 +144,7 @@ function Register({ onRegister }) {
 
         {/* Footer */}
         <p className="text-center text-white mt-8 opacity-75">
-          © 2025 FinPath - Personal Finance Simulator. All rights reserved.
+          © 2025 FinPath - Personal Finance Simulator.
         </p>
       </div>
     </div>

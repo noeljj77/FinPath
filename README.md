@@ -239,7 +239,6 @@ FinPath/
 │
 ├── screenshots/                      # App screenshots
 ├── README.md
-└── LICENSE
 ```
 
 ---

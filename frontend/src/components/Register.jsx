@@ -130,8 +130,10 @@ function Register({ onRegister }) {
             </Link>
           </div>
 
-          <div className="mt-8 p-4 bg-gradient-to-r from-green-50 to-teal-50 rounded-lg border-2 border-green-100">
-            <p className="text-sm font-bold text-green-800 mb-2">🎁 What You Get:</p>
+          
+        </div>
+        <div className="mt-8 p-4 bg-gradient-to-r from-green-50 to-teal-50 rounded-lg border-2 border-green-100">
+            <p className="text-sm font-bold text-green-800 mb-2">What You Get:</p>
             <ul className="space-y-1 text-sm text-gray-700">
               <li>✅ Credit score tracking</li>
               <li>✅ Financial simulation tools</li>
@@ -139,7 +141,6 @@ function Register({ onRegister }) {
               <li>✅ Scenario planning</li>
             </ul>
           </div>
-        </div>
 
         {/* Footer */}
         <p className="text-center text-white mt-8 opacity-75">

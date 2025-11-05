@@ -113,13 +113,7 @@ function Login({ onLogin }) {
             </Link>
           </div>
 
-          <div className="mt-8 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border-2 border-indigo-100">
-            <p className="text-sm font-bold text-indigo-800 mb-2">🎯 Demo Account</p>
-            <div className="space-y-1 text-sm">
-              <p className="text-gray-700"><span className="font-semibold">Email:</span> demo@example.com</p>
-              <p className="text-gray-700"><span className="font-semibold">Password:</span> Demo123!</p>
-            </div>
-          </div>
+          
         </div>
 
         {/* Footer */}
